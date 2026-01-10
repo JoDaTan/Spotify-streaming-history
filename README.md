@@ -18,12 +18,12 @@ Spotify listening data captures detailed user activity, including what (songs, p
 The project implements a star schema with one fact table and three dimension tables:
 
 **Dimension Tables**
-- artists_dim: Artist information (id, name)
-- albums_dim: Album details with artist relationships (id, name, artist_id)
-- songs_dim: Song metadata including Spotify URI and type classification (id, title, spotify_uri, artist_id, album_id, song_type)
+- artists: Artist information (artist_id, artist_name)
+- albums: Album details with artist relationships (album_id, album_title, album_artist)
+- songs: Song metadata including Spotify URI and type classification (song_id, song_title, spotify_uri, artist_id, album_id, song_type)
 
 **Fact Table**
-- streams_fct: Listening events with metrics (id, track_id, stream_date, ms_played, platform, country_code, reason_start, reason_end, shuffle, skipped, offline)
+- streams: Listening events with metrics (stream_id, song_id, stream_date, ms_played, platform, country_code, reason_start, reason_end, shuffle, skipped, offline)
 
 [See database ERD](https://github.com/JoDaTan/Spotify-streaming-history/blob/95b5bd9778e480b7831a0b2c60acd821770375e9/Database%20Schema.png)
 
@@ -49,3 +49,4 @@ The raw JSON is parsed and loaded into the star schema using SQL INSERT statemen
     - Added song type classification (Music vs. Podcast) based on Spotify URI patterns
 
 # Key Insights  
+-----

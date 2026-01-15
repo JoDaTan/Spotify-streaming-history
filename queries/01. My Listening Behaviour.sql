@@ -11,6 +11,9 @@ The Questions:
 
 -- Act 1 Scene I: What does a typical stream record look like?
 SELECT * FROM streams;
+/* INSIGHT
+A typical stream is a single play event of a track recorded with its timestamp, duration, play device, connectivity status and start/end reason
+*/
 
 -- Act 1 Scene II: How often do streams end early, and what are the most common reasons?
 SELECT 
@@ -43,8 +46,7 @@ FROM streams
 GROUP BY stream_platform
 ORDER BY total_listening_time DESC;
 
--- Insight: My streaming platform are mobile and my personal computer. With mobile usage 46 times higher than PC usage.
-
+-- Insight: My streaming platform are mobile and my personal computer. With 460 hours 54 minutes out of approximately 472 hours spent listening on mobile. That is ~98%
 
 -- Act 1 Scene IV: How much of my listening happens offline vs online?
 SELECT 
@@ -67,4 +69,5 @@ FROM streams
 GROUP BY skipped;
 
 --Insight: 42.6% of streams are skipped
+
 

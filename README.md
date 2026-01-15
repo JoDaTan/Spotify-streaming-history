@@ -1,21 +1,17 @@
-# Overview
-This project explores personal Spotify listening data using PostgreSQL to uncover listening patterns, preferences, and habits. The analysis identifies favorite artists, albums, and tracks, while examining listening behaviors such as peak listening hours, shuffle patterns, and platform preferences. I built this project to:
-- Apply SQL data analysis skills on a real-world personal dataset
-- Practice dimensional modeling with star schema design
-- Discover insights about my music listening habits
-- Transform unstructured JSON data into an analytical database structure
+# Spotify Listening Behavior Analysis
+This project analyzes my personal Spotify listening history using SQL to uncover listening behavior, engagement, and preferences over time. Rather than treating this as a set of isolated queries, the analysis is structured as a behavioral narrative that explores how songs, albums, and artists gain, sustain, or lose attention.
+
+The goal is to demonstrate analytical thinking, SQL proficiency, and data storytelling, not just query syntax.
 
 # The Dataset
-Spotify listening data captures detailed user activity, including what (songs, podcasts, videos), when (timestamps in UTC), how long (milliseconds played), and where (country, platform) content was consumed, plus technical details like skip rates, shuffle usage, and unique identifiers (URIs) for tracks/episodes. The data is a JSON file.
-## To get your Spotify data
-1. Log in to your Spotify account
-2. Go to [Spotify Privacy Settings](https://www.spotify.com/ng/account/privacy/)
-3. Check ✅ "Extended Streaming History"
-4. Wait for Spotify to email you the data (usually takes a few days)
-5. Download and extract the JSON file
+- Source: Spotify Streaming History (JSON file) _[How to download your Spotify data](https://www.jamwise.org/p/i-downloaded-my-spotify-user-data)_
+- Time range: 2022 - 2025
+- Records: ~10,600 streaming events
 
-# Database Schema
-The project implements a star schema with one fact table and three dimension tables:
+The raw data was extracted, normalized and modeled into a star schema for analysis
+
+# Data Model
+The database consists of:
 
 **Dimension Tables**
 - artists: Artist information (artist_id, artist_name)
@@ -25,28 +21,19 @@ The project implements a star schema with one fact table and three dimension tab
 **Fact Table**
 - streams: Listening events with metrics (stream_id, song_id, stream_date, ms_played, platform, country_code, reason_start, reason_end, shuffle, skipped, offline)
 
-[See database ERD](https://github.com/JoDaTan/Spotify-streaming-history/blob/95b5bd9778e480b7831a0b2c60acd821770375e9/Database%20Schema.png)
+[Database ERD](https://github.com/JoDaTan/Spotify-streaming-history/blob/95b5bd9778e480b7831a0b2c60acd821770375e9/Database%20Schema.png)
 
-# Data Pipeline
-1. **Data Extraction & Loading**
-```
--- Create staging table for raw JSON data
-CREATE TABLE IF NOT EXISTS spotify_raw (
-    id SERIAL PRIMARY KEY,
-    data JSONB
-);
+# Key Definitions
+To ensure analytical clarity, the following definitions are used:
+- Stream: A single play event of song on a device(`platform`), recorded with timestamp (`stream_time`), duration (`play_length_ms`) and associated metadata
+- Completed stream: a stream with `reason_end = 'trackdone'`
+- Frequent plays: a song with a stream count >= 10
+- Favourite artist/song/album: artist/song/album with above average engagment (total stream/total listen time)
 
--- Load JSON data using PostgreSQL's JSONB functions
-INSERT INTO spotify_raw (data)
-SELECT jsonb_array_elements(pg_read_file('Streaming_History_Audio_2022-2025.json')::jsonb);
-```
+# Analytical Themes & Insight
+1. **Listening Behavior (Device, Connectivity, Completion/Skip Rate):** My listening habits are mobile-first (~98% of all streams), online-driven, with frequent skips (42.6% of streams). 50% of streams end early and due to user interaction (forward skip - 55%, backward skip / remote - 8%).
 
-2.  **Data Transformation**
-The raw JSON is parsed and loaded into the star schema using SQL INSERT statements with JOIN operations to maintain referential integrity across dimension and fact tables.
+2. **Engagement & Frequency:** Listening is genre-loyal, artist-concentrated and highly interactive dominated by progressive/alternative rock, concentrated among a few core artists, with repeat returns to favorite albums, frequent skips on certain songs, and minimal engagement with non‑music audio.
 
-3.  **Data Cleaning**
-    - Standardized platform names (consolidated Android variants)
-    - Added song type classification (Music vs. Podcast) based on Spotify URI patterns
-
-# Key Insights  
+3. 
 -----

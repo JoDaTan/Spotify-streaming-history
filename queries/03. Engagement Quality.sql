@@ -29,6 +29,12 @@ SELECT
 FROM total_plays
 WHERE total_listening_time > (SELECT AVG(total_listening_time) FROM total_plays)
 ORDER BY total_listening_time DESC;
+/*
+Insight:
+The result show dominance of progressive and long-form artists (Tool, A Perfect Circle, Soen, David Gilmour, Nad Sylvan) suggests a strong preference for extended compositions that reward sustained attention.
+Alongside this, a subset of tracks (That Home, Quietly, The Grocery, Fake Plastic Trees) function as emotional anchors. 
+Their repeated, long-duration listening indicates periods where music served a regulatory role, supporting mood and emotional processing rather than passive entertainment.
+*/
 
 
 -- Act 3 Scene II: Which artists outperform the average artist in terms of engagement?
@@ -53,6 +59,12 @@ WHERE (
 	total_listen_time > (SELECT AVG(total_listen_time) FROM artist_engagement)
 )
 ORDER BY 2 DESC;
+/*
+My engagement is anchored by progressive and alternative rock artists, with Manchester Orchestra as the clear centerpiece.
+A Perfect Circle, TOOL, and Soen form a strong progressive spine, while Half Moon Run and Sleeping At Last add emotional depth.
+While my core is rooted in rock/prog, my listening identity is enriched by eclectic, immersive outliers — from AfroBeats, Amapiano, and Highlife — with artists like;
+Asa, Burna Boy, Kabza De Small, Chief Osita Osadebe, and Asake making rare but above‑average appearances in my listening time.
+*/
 
 -- Act 3 Scene III: Are there artists I listen to often but rarely finish songs from?
 WITH artist_engagement AS (
@@ -84,6 +96,19 @@ JOIN artists ar ON ar.artist_id = so.artist_id
 WHERE artist_name IN (SELECT artist_name FROM above_avg_artists)
 GROUP BY artist_name
 ORDER BY completion_rate DESC;
+/*
+Insight:
+Among the artists I engage with most, several show high play counts but low completion rates.
+Manchester Orchestra (662 plays, 55% completion), A Perfect Circle (550 plays, 61%), and Soen (460 plays, 38%) dominate my listening in volume but are frequently skipped before the end. 
+Similarly, immersive artists like TOOL (317 plays, 47%) and Porcupine Tree (216 plays, 41%) reflect the same pattern, likely due to their long track lengths.
+
+By contrast, artists such as Dan Deacon (94% completion), Novo Amor (78%), and City Boys Band (85%) show that when I play them, I almost always let the track run to completion — highlighting a different, more immersive listening mode.
+
+Takeaway
+My listening splits into two modes:
+- Exploration mode → Progressive/alt‑rock staples I play often but skip midway.
+- Immersion mode → Select artists I finish almost every time, even if play counts are lower.
+*/
 
 
 -- Act 3 Scene IV: Which albums have high completion rates compared to others?
@@ -130,4 +155,5 @@ FROM song_stat
 JOIN averages ON 1 = 1
 WHERE play_count > averages.avg_play_count
 	AND avg_play_length < averages.avg_play_time
+
 ORDER BY avg_play_length DESC;

@@ -38,8 +38,12 @@ To ensure analytical clarity, the following definitions are used:
      - 42.6% of streams skipped
      - ~50% end early due to user interaction (forward skip dominates - 55%, followed by bakward/remote skips - 8%)
 
-2. **Engagement & Frequency:**
-    - 
-
-4. 
------
+2. **Listening Engagement & Concentration**
+   - My listening is heavily skewed towards progressive rock/metal and alternative rock, anchored by a small set of artists; TOOL, A Perfect Circle, Soen, Porcupine Tree, The Pineapple Thief, Manchester Orchestra, Half Moon Run
+   - My top 20 artists account for 47.5% of all streams (5,039 v 10,610)
+   - High replay intensity: Manchester Orchestra, A Perfect Circle, TOOL, Soen, and Half Moon Run drive repeat engagement, with Manchester Orchestra exceeding 540 plays across three albums.
+   - Selective track engagement: Frequently replayed songs still show 70–100% skip rates, indicating album revisits with selective track-level disengagement (e.g., Deceiver never completed; The Wolf by Ben Howard 88% skipped).
+   - Music-first platform usage: Streams are overwhelmingly music-focused, averaging ~3 minutes per play with a 49% overall skip rate. Non-music audio shows minimal engagement, with 100% of podcast streams skipped, reinforcing music as the primary consumption intent.
+  
+3. **Listening Engagement Quality & Patterns**
+   - 

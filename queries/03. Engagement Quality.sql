@@ -112,16 +112,47 @@ My listening splits into two modes:
 
 
 -- Act 3 Scene IV: Which albums have high completion rates compared to others?
-SELECT 
-	al.album_title,
-	COUNT(st.stream_id) total_streams,
-	ROUND(100 * (COUNT(CASE WHEN st.reason_end = 'trackdone' THEN 1 END)::numeric / COUNT(st.stream_id)) , 2) AS completion_rate
-FROM streams st
-JOIN songs so ON so.song_id = st.song_id
-JOIN artists ar ON ar.artist_id = so.artist_id
-JOIN albums al ON al.album_artist = ar.artist_id
-GROUP BY al.album_title
-ORDER BY completion_rate DESC;
+WITH song_stat AS (
+	SELECT
+		ar.artist_id,
+		so.song_title,
+		al.album_title,
+		COUNT(st.stream_id) play_count,
+		COUNT(
+			CASE WHEN st.reason_end = 'trackdone' THEN 1 END
+		) completed_stream
+	FROM streams st
+	JOIN songs so ON so.song_id = st.song_id
+	JOIN albums al ON al.album_id = so.album_id
+	JOIN artists ar ON ar.artist_id = al.album_artist
+	GROUP BY song_title, album_title, ar.artist_id
+),
+album_completion AS(
+	SELECT 
+		ss.album_title,
+		ar.artist_name,
+		COUNT(DISTINCT song_title) distinct_songs,
+		SUM(play_count) album_play_count,
+		SUM(completed_stream) * 100 / NULLIF(SUM(play_count), 0) weighted_completion_rate
+	FROM song_stat ss
+	JOIN artists ar ON ar.artist_id = ss.artist_id
+	GROUP BY album_title, ar.artist_name
+)
+SELECT
+	artist_name,
+	album_title,
+	distinct_songs,
+	ROUND(weighted_completion_rate, 2) album_completion_rate
+FROM album_completion
+WHERE weighted_completion_rate > (SELECT AVG(weighted_completion_rate) FROM album_completion)
+	AND distinct_songs > 1 -- to exclude singles and EPs
+ORDER BY weighted_completion_rate DESC, distinct_songs DESC;
+/*
+Insight:
+- Folk, Indie and Ambient albums show a high completion rate of about 70%+ although the albums are often smaller with 2-7 distinct songs
+- Rock and Afrobeat albums have moderate completion with about 6-13 distinct songs
+- Progressive albums are larger (10 - 15 distinct songs) and have low completion rate which tells of selective listening.
+*/
 
 
 -- Act 3 Scene V: How many songs appear frequently in my history but fall below my personal average play length?
@@ -155,5 +186,5 @@ FROM song_stat
 JOIN averages ON 1 = 1
 WHERE play_count > averages.avg_play_count
 	AND avg_play_length < averages.avg_play_time
-
 ORDER BY avg_play_length DESC;
+

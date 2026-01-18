@@ -43,13 +43,13 @@ ORDER BY listen_year, total_listen_time DESC;
 
 /*
 Insight:
-1. Taste and activity shift 	
-	- 2022: The year of prog, rock and metal - The Pineapple Thief, Soen, TOOL, A Perfect Circle, Porcupine Tree and Gojira dominate the top 1o spots
-	- 2023: Heavy music activity and an even split dominance between prog rock and metal and alternative artist
-	- 2024: Less music activity with alternative artists dominating which shows a taste pivot from the heavy music listen of 2022 and 2023
-	- 2025: Even fewer music activity
+Consistent Favourites: 
+	- Manchester Orchestra (top 3 across all years), 
+	- TOOL and A Perfect Circle (consisten top 8 rank) confirming my taste for Alternative and Progressive rock
+	- Novo Amor appears in 2023, 2024 and 2025 indicating a more recent but growing favourite
 
-2. Consistency: While taste and activity level changes, Manchester Orchestra and TOOL show consistent presence across time
+New Interest: 
+	- Hans Zimmer emerging as a new interest (top artist in 2025)
 */
 
 
@@ -93,6 +93,10 @@ ORDER BY
     COALESCE(rank_2023, 9999),
     COALESCE(rank_2024, 9999),
     COALESCE(rank_2025, 9999);
+/*
+Insight:
+
+*/
 
 
 -- Act 4 Scene III: What does my cumulative listening time look like across a year?
@@ -222,3 +226,4 @@ FROM streak_group
 GROUP BY artist_name, album_title, streak_id
 HAVING COUNT(*) > 1
 ORDER BY songs_in_streak DESC;
+
